@@ -1,0 +1,2 @@
+gst-launch-1.0 rtspsrc location="rtsp://10.12.1.80/av0_0" ! rtph264depay ! capsfilter caps="video/x-h264" ! h264parse ! avdec_h264 !  videoanalysis businessdll=<dir>/libinferservice.so  ! postprocess ! mqtt username=admin userpwd=admin servip=10.11.5.247 servport=1883 ! fakevideosink
+#gst-launch-1.0 rtspsrc location="rtsp://10.11.14.61/av0_0" ! rtph264depay ! capsfilter caps="video/x-h264" ! h264parse ! hwvideodec ! videoanalysis businessdll=/home/khadas/lib/libinferservice.so ! postprocess ! mqtt username=admin userpwd=admin servip=10.11.5.247 servport=1883 ! fakevideosink
