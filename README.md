@@ -23,19 +23,19 @@ Tengine-Streamer中的解决方案的基础插件：
 - streammux：多路流合并成一路由一路算法处理多路
 - streamdemux：一路推理的结果分离出相对应的各路，与streammux配合使用
 - videoanalysis：主要的推理插件，提供了标准二次插件接口，可以动态加载推理业务，在大多数不想写插件的时候，只需要实现一个业务动态库，由此插件把推理业务交给推理业务库即可。配合类“inferservice”的业务库使用。如果特别熟悉GStreamer插件开发，可以自己写一个插件来直接进行推理业务。
-- mqtt：提供了把推理结果向 mqtt broker 泵的插件
+- mqtt：提供了把推理结果泵向 mqtt broker 
 - postprocess：简单的把推理结果叠加到视频流的功能
 ## 业务插件
 - inferservice：调用Tengine 推理框架，加载模型，推理结果，并把结果输出到分析插件
 
 gst-launch-1.0 rtspsrc location="rtsp://**" ! rtph264depay ! capsfilter caps="video/x-h264" ! h264parse ! avdec_h264 !  videoanalysis businessdll=/dir/libinferservice.so  ! postprocess ! mqtt username=admin userpwd=admin servip=10.11.5.247 servport=1883 ! fakevideosink
 
-按照inferservice框架编译的库，也可以作为videoanalysis 插件的业务库传入，可以支持不同算法业务。
+按照类 inferservice库的框架编译的库，也可以作为videoanalysis 插件的业务库传入，修改businessdll属性为业务库地址，即可以支持不同算法业务。
 ## 需要安装依赖：
 - sudo apt install -y build-essential cmake
 - sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 
-目前在khadas 板子编译，其他只需更改Tengine推理库编译即可
+目前在khadas 环境编译，其他设备只需替换不同Tengine推理库即可
 ### 编译方法：
 cmake 目录下：cross.cmake 里面，有交叉编译开关，如果是交叉编译环境，调整交叉编译路径。真机环境，可以把交叉编译关闭。对应的khadas支持库已经提供。
 
