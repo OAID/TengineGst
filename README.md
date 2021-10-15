@@ -11,7 +11,7 @@ Tengine Streamer是由 OPEN AI LAB基于GStreamer多媒体框架的分析推理�
 
 Tengine-Streamer中的解决方案的基础插件：
 
-特定于深度学习的元素，这些元素也可在此存储库中获得：
+特定于深度学习的插件，这些插件也可在此存储库中获得：
 
 1：推理插件利用Tengine 使用深度学习模型进行高性能推理
 
