@@ -11,7 +11,7 @@ Tengine Streamer是由 OPEN AI LAB基于GStreamer多媒体框架的分析推理�
 
 Tengine-Streamer中的解决方案的基础插件：
 
-特定于深度学习的元素，这些元素也可在此存储库中获得：
+特定于深度学习的插件，这些插件也可在此存储库中获得：
 
 1：推理插件利用Tengine 使用深度学习模型进行高性能推理
 
@@ -27,6 +27,10 @@ Tengine-Streamer中的解决方案的基础插件：
 - postprocess：简单的把推理结果叠加到视频流的功能
 ## 业务插件
 - inferservice：调用Tengine 推理框架，加载模型，推理结果，并把结果输出到分析插件
+
+gst-launch-1.0 rtspsrc location="rtsp://*/*" ! rtph264depay ! capsfilter caps="video/x-h264" ! h264parse ! avdec_h264 !  videoanalysis businessdll=<dir>/libinferservice.so  ! postprocess ! mqtt username=admin userpwd=admin servip=10.11.5.247 servport=1883 ! fakevideosink
+
+按照inferservice框架编译的库，也可以作为videoanalysis 插件的业务库传入，可以支持不同算法业务。
 ## 需要安装依赖：
 - sudo apt install -y build-essential cmake
 - sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
