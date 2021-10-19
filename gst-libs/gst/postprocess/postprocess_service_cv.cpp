@@ -27,7 +27,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <corecv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include "postprocess_service_cv.h"
 /* GetRValue */
@@ -42,7 +45,10 @@ int draw_rect(unsigned char *yuv, BBOX_S &rect)
 	cv::Mat frame(1080 * 1.5, 1920, CV_8UC1, (unsigned char *)yuv, 0);
 
 	//cv::rectangle(frame, cv::Rect(rect.x, rect.y, rect.width, rect.heigh), cv::Scalar(255, 0, 0), 2, 1, 0);
-	cv::rectangle(frame, cv::Rect(rect.x, rect.y, rect.width, rect.heigh), 
+	//cv::rectangle(frame, cv::Rect(rect.x, rect.y, rect.width, rect.heigh), 
+	//	cv::Scalar(COLOR_GET_BLUE(rect.uColor),COLOR_GET_GREEN(rect.uColor),COLOR_GET_RED(rect.uColor)),
+	//	2, 1, 0);
+	cv::rectangle(frame, cv::Point(rect.x, rect.y), cv::Point(rect.x + rect.width, rect.y + rect.heigh), 
 		cv::Scalar(COLOR_GET_BLUE(rect.uColor),COLOR_GET_GREEN(rect.uColor),COLOR_GET_RED(rect.uColor)),
 		2, 1, 0);
 #if 0	
@@ -58,7 +64,10 @@ int draw_rects(unsigned char *yuv, vector<BBOX_S> &rects)
 	cv::Mat frame(1080 * 1.5, 1920, CV_8UC1, (unsigned char *)yuv, 0);
 
 	for (int i = 0; i < (int)rects.size(); i++){
-		cv::rectangle(frame, cv::Rect(rects[i].x, rects[i].y, rects[i].width, rects[i].heigh), 
+		//cv::rectangle(frame, cv::Rect(rects[i].x, rects[i].y, rects[i].width, rects[i].heigh), 
+		//	cv::Scalar(COLOR_GET_BLUE(rects[i].uColor),COLOR_GET_GREEN(rects[i].uColor),COLOR_GET_RED(rects[i].uColor)),
+		//	2, 1, 0);
+		cv::rectangle(frame, cv::Point(rects[i].x, rects[i].y), cv::Point(rects[i].x + rects[i].width, rects[i].y + rects[i].heigh), 
 			cv::Scalar(COLOR_GET_BLUE(rects[i].uColor),COLOR_GET_GREEN(rects[i].uColor),COLOR_GET_RED(rects[i].uColor)),
 			2, 1, 0);
 	}

@@ -43,6 +43,12 @@ extern "C" {
 typedef void (*INFER_SERV_RES_CB)(void *frame, void* boxes, void *userdata);
 typedef int (*INFER_SERV_Msg_CB)(int nCmd,void *bufMsg, void *userdata);
 
+enum
+{
+	enMMST_Start=0,
+	enMMST_End
+};
+
 /*
 1、通道绑定一个模型实例
 2、通道具备相应的回调函数,将推理结果回调到上一层
@@ -52,12 +58,6 @@ typedef struct _Frame_Mem
 	FRAME_DATA_S frame;
 	int nCopySt;
 }TFrameMem;
-
-enum
-{
-	enMMST_Start=0,
-	enMMST_End
-};
 
 typedef struct _INFER_CHN
 {
@@ -75,12 +75,13 @@ typedef struct _INFER_CHN
 }TINFER_CHN_HDL;
 
 //动态调用
+/*
 void *CreateChn(INFER_SERV_RES_CB cbRes,INFER_SERV_Msg_CB cbMsg,void *user);
 int DestoryChn(void *handle);
 int SendFrame(void *handle, void *frame);
 int SetChnAttr(void *handle,int nPropID,int nPropType,void *dtAttr);
 int GetChnAttr(void *handle,int nPropID,void *dtAttr);
-
+*/
 #ifdef	__cplusplus
 }
 #endif

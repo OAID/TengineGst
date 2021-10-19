@@ -111,9 +111,6 @@ int CMqtt::Publish(const char *topic, const char *message)
 {
 	if(mpMqtt){
 		int ret;
-
-		LOG_INFO("public event");
-		
 		ret = mosquitto_publish(mpMqtt, NULL, topic, strlen(message), message, 0, 0);
 		if (ret < 0)
 		{

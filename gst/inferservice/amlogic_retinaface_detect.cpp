@@ -25,7 +25,8 @@
 #include <time.h>
 #include <sys/time.h>
 #include "amlogic_retinaface_multi_detect_algo.h"
-#include "tengine_c_api.h"
+//#include "tengine_c_api.h"
+#include <tengine/c_api.h>
 
 #include <algorithm>
 #include <math.h>

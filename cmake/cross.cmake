@@ -19,29 +19,12 @@
 # Author: wlwu@openailab.com
 #
 
-SET(CROSS_COMPILE 1)
+SET(CROSS_COMPILE 0)
+SET(USE_KHADAS_ENV 0)
 		
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gstreamer/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gstreamer/lib)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glib/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glib/lib)
-
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/corecv/lib)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tengine/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tengine/lib)
-
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zlog/lib)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/algo/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/algo/lib)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/mosquitto/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/mosquitto/lib)
-
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libffi/lib64)	
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/pcre/lib)
+set(GNU_FLAGS "-fPIC")
+set(CMAKE_CXX_FLAGS "${GNU_FLAGS} ")
+set(CMAKE_C_FLAGS "${GNU_FLAGS}  ")
 
 IF(CROSS_COMPILE) 	  
 	SET(CMAKE_SYSTEM_NAME Linux)
@@ -50,12 +33,33 @@ IF(CROSS_COMPILE)
 	set(CMAKE_CXX_COMPILER ${TOOLCHAIN_DIR}/bin/aarch64-linux-gnu-g++)
 	set(CMAKE_C_COMPILER   ${TOOLCHAIN_DIR}/bin/aarch64-linux-gnu-gcc)
 #	set(GNU_FLAGS "-mfpu=vfp -fPIC")
-	set(GNU_FLAGS "-fPIC")
-	set(CMAKE_CXX_FLAGS "${GNU_FLAGS} ")
-	set(CMAKE_C_FLAGS "${GNU_FLAGS}  ")
 
 	SET(CMAKE_FIND_ROOT_PATH  ${TOOLCHAIN_DIR}
 		 ${TOOLCHAIN_DIR}/aarch64-linux-gnu/include
 		  ${TOOLCHAIN_DIR}/aarch64-linux-gnu/lib )
+			
   ENDIF(CROSS_COMPILE)
 
+  IF(USE_KHADAS_ENV) 
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gstreamer/include)
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gstreamer/lib)
+
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glib/include)
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glib/lib)
+
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/corecv/lib)
+
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tengine/include)
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tengine/lib)
+
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zlog/lib)
+
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/algo/include)
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/algo/lib)
+
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/mosquitto/include)
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/mosquitto/lib)
+
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libffi/lib64)	
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/pcre/lib)	 
+  ENDIF(USE_KHADAS_ENV)

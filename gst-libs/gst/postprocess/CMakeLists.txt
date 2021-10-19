@@ -49,13 +49,14 @@ PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../gst/gst_infer_meta
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../gst/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../gst/include/corecv
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../../../gst/include/corecv
 )
 
 target_link_libraries(${TARGET_NAME}
 PUBLIC
         -ldl -lm 
-        -loal_corecv
+#        -loal_corecv
+        -lopencv_core -lopencv_imgproc -lopencv_highgui 
         ${GSTREAMER_LDFLAGS}
         ${GLIB2_LIBRARIES}
         gstinfermeta
@@ -63,3 +64,5 @@ PUBLIC
 )
 install(TARGETS ${TARGET_NAME}
             LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/libs)
+
+install(TARGETS ${TARGET_NAME} DESTINATION ${TSTREAMER_PLUGINS_INSTALL_PATH}/)

@@ -45,13 +45,14 @@ PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/include
         ${CMAKE_CURRENT_SOURCE_DIR}/../include
-        ${CMAKE_CURRENT_SOURCE_DIR}/../include/corecv
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../include/corecv
 )
 
 target_link_libraries(${TARGET_NAME}
 PUBLIC
         -ldl -lm
-        -loal_corecv
+        #-loal_corecv
+        -lopencv_core -lopencv_imgproc -lopencv_highgui 
         -ltengine-lite
         utils
         ${GSTREAMER_LDFLAGS}

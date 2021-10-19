@@ -25,7 +25,6 @@
 #include "objdetect.h"
 #include <stdlib.h>
 #include <string.h>
-#include <corecv.hpp>
 #include <unistd.h>
 #include "normal.h"
 #include "loger.h"
@@ -34,7 +33,7 @@ using namespace cv;
 
 static void *worker(void *parg);
 CBaseInfer::CBaseInfer():
-	m_ori_size(cv::Size(1920,1080)),
+	m_szOriPic(cv::Size(1920,1080)),
     mRunning(0){
 	memset(m_blob_shape,0,4*sizeof(int));
 	
@@ -42,12 +41,12 @@ CBaseInfer::CBaseInfer():
 	m_nThreshold = 80;
 	mModelState = 0;
 	m_nShapeW = m_nShapeH = 0;
+	m_tsCfgPath[0] = '\0';
 }
 
 CBaseInfer::~CBaseInfer(){
 }
 
-#define CFG_BODY_DETECT "/root/install/config/cfg-body.json"
 static int s_vtClr[] = {0x0000FF,0x00FAFA,0xFF0000,0x00FF00,0x962FEB,0x8F00FF};
 
 int CBaseInfer::initModel()
@@ -58,7 +57,7 @@ int CBaseInfer::initModel()
 int CBaseInfer::LoadCfgFromFile()
 {
 	Json::Value jvRoot;
-	if(loadcfg2json(m_tsCfgPath,jvRoot))
+	if(strlen(m_tsCfgPath)>0 && loadcfg2json(m_tsCfgPath,jvRoot))
 	{
 		int nDetectMinSize = jvRoot["min_size"].asInt();
 		if(2 == nDetectMinSize)
@@ -152,7 +151,7 @@ TINFER_CHN_HDL *CBaseInfer::CreateChn(INFER_SERV_RES_CB cbRes,INFER_SERV_Msg_CB 
 		TINFER_CHN_HDL *pTmpChn = (TINFER_CHN_HDL*)malloc(sizeof(TINFER_CHN_HDL));
 		if(pTmpChn)
 		{
-			memset(pTmpChn,0,sizeof(TINFER_CHN_HDL));
+			memset((void*)pTmpChn,0,sizeof(TINFER_CHN_HDL));
 		}
 		pTmpChn->callback = cbRes;
 		pTmpChn->cbMsg = cbMsg;
@@ -199,7 +198,6 @@ int CBaseInfer::DestoryChn(TINFER_CHN_HDL *handle){
 	return 0;
 }
 
-static int s_printNum = 200;
 int CBaseInfer::SendFrame(TINFER_CHN_HDL *handle, FRAME_DATA_S *frame){	
 	TINFER_CHN_HDL * pChnHdl = find(handle->userdata);
 	if(pChnHdl && m_nShapeH>0 && 0==handle->mIsDel)
@@ -221,23 +219,6 @@ int CBaseInfer::SendFrame(TINFER_CHN_HDL *handle, FRAME_DATA_S *frame){
 		pChnHdl->arrframe[nCurSave].width = frame->width;
 		pChnHdl->arrframe[nCurSave].height = frame->height;
 		pChnHdl->mCopySt = enMMST_End;
-		//pChnHdl->mCurInfer = !pChnHdl->mCurInfer;
-		++s_printNum;
-#if 0
-		if(s_printNum>200)
-		{
-			s_printNum = 0;
-			//amlvdec 不能正确解码
-			FILE *pYuv = fopen("/home/khadas/ori.yuv","wb");
-			if (pYuv)
-			{
-				fwrite(frame->data,frame->len,1,pYuv);
-				fclose(pYuv);
-			}
-			LOG_INFO("===>[CBaseInfer]->SendFrame chn=0x%x st=%d,dlen=%d,curInfer=%d,save=%d.\n",
-    			handle->userdata,pChnHdl->mCopySt,frame->len,pChnHdl->mCurInfer,nCurSave);
-		}
-#endif		
 	}
 	return 0;
 }
@@ -338,7 +319,6 @@ void Rect_Ajust(BBOX_S *box, int stream_width, int stream_height, int net_width,
 	box->heigh = box->heigh * stream_height / net_height;	
 }
 
-static int s_nInferIdx = 0;
 int CBaseInfer::do_work()
 {
 	//遍历通道，对通道的当前检测的帧检测

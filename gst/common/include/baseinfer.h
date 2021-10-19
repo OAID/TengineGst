@@ -30,7 +30,12 @@
 #include <vector>
 #include <queue>
 #include <pthread.h>
-#include "corecv.hpp"
+//#include "corecv.hpp"
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
+
+
 #include "inferinf.h"
 
 using namespace std;
@@ -77,10 +82,13 @@ protected:
     // 图像格式
     IMAGE_TYPE_E m_img_type;
     // 原图大小
-    cv::Size m_ori_size;
-    cv::Size m_model_size;
+    cv::Size m_szOriPic;
+	// 模型要求宽高
+    cv::Size m_szModelInput;
 	int m_nFps;
-	int m_nCheckWidth;
+	// 检测图片宽高
+	int m_nCheckWidth; 
+	// 检测阈值
 	int m_nThreshold;
 	char m_tsCfgPath[128];
 	char m_tsModelUrl[1024];

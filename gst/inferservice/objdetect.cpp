@@ -25,7 +25,7 @@
 #include "objdetect.h"
 #include <stdlib.h>
 #include <string.h>
-#include <corecv.hpp>
+//#include <corecv.hpp>
 #include <unistd.h>
 #include "normal.h"
 
@@ -75,7 +75,6 @@ int CInferIns::InMsg(void *handle,TPluginMsg *data)
 	return CObjdetectServ::getInstance()->InMsg((TINFER_CHN_HDL *)handle,data);
 }
 
-#define CFG_BODY_DETECT "/root/install/config/cfg-body.json"
 static void *worker(void *parg);
 CObjdetectServ::CObjdetectServ(){
 	memset(m_blob_shape,0,4*sizeof(int));
@@ -83,7 +82,6 @@ CObjdetectServ::CObjdetectServ(){
 	m_nCheckWidth = 50;
 	m_nThreshold = 80;
 	m_pModelHdl = NULL;
-	strcpy(m_tsCfgPath,CFG_BODY_DETECT);
 }
 
 CObjdetectServ::~CObjdetectServ(){
@@ -131,8 +129,8 @@ int CObjdetectServ::do_initModel()
 	retina_param.inputTensorName = "input0";
 	retina_param.outputTensorNames = std::vector<std::string>({"classes", "bbox"});
 	retina_param.with_sigmoid = false;
-	//sprintf(tsModelPath,"%s","/root/install/model/from_onnx_UINT8.tmfile");
-	sprintf(tsModelPath,"%s","/home/khadas/from_onnx_UINT8.tmfile");
+	//模型路径
+	sprintf(tsModelPath,"%s","/home/wlwu/from_onnx_UINT8.tmfile");
 	AMLOGIC_Load_Retinaface_Model(tsModelPath ,retina_param, &m_pModelHdl, m_blob_shape);
     m_nShapeC = m_blob_shape[1];
     m_nShapeH = m_blob_shape[2];
@@ -200,12 +198,8 @@ int CObjdetectServ::RealWork(TINFER_CHN_HDL *pChnHdl){
 	std::vector<abox> result;
 	cv::Mat img;
 	cv::Mat frameMat = cv::Mat(pChnHdl->arrframe[pChnHdl->mCurInfer].height * 3 / 2,
-		pChnHdl->arrframe[pChnHdl->mCurInfer].width, CV_8UC1, pChnHdl->arrframe[pChnHdl->mCurInfer].data, 0); 	/* bug */
-	//cv::cvtColor(frameMat, img, cv::COLOR_YUV2RGB_NV21);
+		pChnHdl->arrframe[pChnHdl->mCurInfer].width, CV_8UC1, pChnHdl->arrframe[pChnHdl->mCurInfer].data, 0);
 	cv::cvtColor(frameMat, img, cv::COLOR_YUV2RGB_I420);
-	//cv::Mat img( pChnHdl->arrframe[pChnHdl->mCurInfer].height,
-	//        pChnHdl->arrframe[pChnHdl->mCurInfer].width,
-	//       CV_8UC3, pChnHdl->arrframe[pChnHdl->mCurInfer].data);
 	sprintf(tsImgPath,"/root/saveYuv_%d.jpg",s_nInferIdx);
 	float img_scale_h, img_scale_w;
 	img_scale_h = float(m_nShapeH)/ float(img.rows);
@@ -213,32 +207,18 @@ int CObjdetectServ::RealWork(TINFER_CHN_HDL *pChnHdl){
 
 	if(NULL==pChnHdl->pBufInfer)
 		pChnHdl->pBufInfer = new uint8_t[m_nShapeH*m_nShapeW*m_nShapeC];
-	//resize planar
 	preprocess_img(img, pChnHdl->pBufInfer, m_blob_shape);
-	//resize packed
-	//cv::Mat resized_mat(m_nShapeH, m_nShapeW, img.type());
-	//cv::resize(img, resized_mat, resized_mat.size(), 0, 0);
-	/*if(0==s_bSave){
-		cv::imwrite(tsImgPath, frameMat);
-		cv::Mat objPackImg(m_blob_shape[2],m_blob_shape[3],
-				CV_8UC3, pChnHdl->pBufInfer);
-		sprintf(tsImgPath,"/root/saveResz_%d.jpg",s_nInferIdx);
-		cv::imwrite(tsImgPath, objPackImg);
-		s_bSave = 1;
-	}*/
-	//TIC();
 	AMLOGIC_Retinaface_Forward_Buffer((void*)pChnHdl->pBufInfer,
 		img_scale_h, img_scale_w, m_pModelHdl, result);
 	
-	//TOC("---[CObjdetectServ::do_work]->Forward_Buffer");
 	//把结果回调出去？
-	LOG_INFO("\n===>[do_work]->infer cb=0x%x buf=0x%x,count=%d,in dlen=%d w:h=%d:%d,w:h=%d:%d.\n",
+	/*LOG_INFO("\n===>[do_work]->infer cb=0x%x buf=0x%x,count=%d,in dlen=%d w:h=%d:%d,w:h=%d:%d.\n",
 		pChnHdl->callback,
 		pChnHdl->pBufInfer,result.size(),
 			pChnHdl->arrframe[pChnHdl->mCurInfer].len,
 		pChnHdl->arrframe[pChnHdl->mCurInfer].width,
 		pChnHdl->arrframe[pChnHdl->mCurInfer].height,
-		m_blob_shape[2],m_blob_shape[3]);
+		m_blob_shape[2],m_blob_shape[3]);*/
 	//0 行人，1 人头, 2 安全帽
 	if(result.size()<50){
 		vector<BBOX_S> boxes;

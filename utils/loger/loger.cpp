@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "normal.h"
 
 CLoger::CLoger()
 {
@@ -39,32 +40,36 @@ CLoger::~CLoger()
 
 }
 
-static char s_DefaultConf[] = "[formats]\
+static char s_DefaultConf[] = "[formats]\n\
 	LogFormat = \"%d(%m-%d %T) %-5V [%c:%F:%-5L] %m%n\".\
-	[rules]\
-	*.*    >stdout; LogFormat\
+	\n[rules]\n\
+	*.*    >stdout; LogFormat\n\
 	";
 	
 int CLoger::init(const char *path, const char *category)
 {
-	int ret;
+	int ret = -1;
+	char bNew = 0;
+	char confPath[128] = {0};
 
-	ret = zlog_init(path);
+	if(file_size(path)<=0){
+		sprintf(confPath,"%s/zlog.conf",getenv("HOME"));
+		if(file_size(confPath)<=0){
+			FILE *pFile = fopen(confPath,"wb");
+			printf("[%s]->newPath=%s,pfile=%p.\n",__func__,confPath,pFile);
+			if(pFile)
+			{
+				fwrite(s_DefaultConf,strlen(s_DefaultConf),1,pFile);
+				fclose(pFile);
+			}
+		}
+		bNew = 1;
+	}
+	ret = zlog_init(bNew?confPath:path);
 	if (ret < 0)
 	{
-		char confPath[128] = {0};
-		sprintf(confPath,"%s/zlog.conf",getenv("HOME"));
-		FILE *pFile = fopen(confPath,"wb");
-		if(pFile)
-		{
-			fwrite(s_DefaultConf,strlen(s_DefaultConf),1,pFile);
-			fclose(pFile);
-		}
-		ret = zlog_init(confPath);
-		if (ret < 0){
-			printf("[%d_%s] zlog_init home=%s fail[%s]\n", __LINE__, __func__, getenv("HOME"), confPath);
-			return -1;
-		}
+		printf("[%d_%s] zlog_init home=%s fail[%s]\n", __LINE__, __func__, getenv("HOME"), path);
+		return ret;
 	}
 	mCategory = zlog_get_category(category);
 	if (NULL == mCategory)

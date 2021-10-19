@@ -61,10 +61,10 @@ add_definitions(-DPLUGIN_VERSION="${PLUGIN_VERSION}")
 add_definitions(-DPACKAGE="gst-video-analyticsin")
 add_definitions(-DPACKAGE_NAME="GStreamer Video Analytics elements")
 add_definitions(-DGST_PACKAGE_ORIGIN="https://github.com/OAID/TengineStreamer")
-add_definitions(-DPLUGIN_LICENSE="Apache-2.0")
+add_definitions(-DPLUGIN_LICENSE="MIT/X11")   #Apache-2.0") 
 
 macro(find_IE_package)
-    set(IE_MIN_VERSION "2021.4.0")
+    set(IE_MIN_VERSION "2021.10.0")
     find_package(InferenceEngine REQUIRED)
     if (${InferenceEngine_VERSION} VERSION_LESS ${IE_MIN_VERSION})
         message(FATAL_ERROR "InferenceEngine version should be >= ${IE_MIN_VERSION}. Found: ${InferenceEngine_VERSION}")
@@ -123,13 +123,13 @@ set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${CMAKE_BU
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE}/bin)
 set (CMAKE_SAMPLES_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE}/samples)
 
-set (TLSTREAMER_LIBRARIES_INSTALL_PATH lib)
-set (TLSTREAMER_PLUGINS_INSTALL_PATH ${TLSTREAMER_LIBRARIES_INSTALL_PATH}/gstreamer-1.0)
-set (TLSTREAMER_HEADERS_INSTALL_PATH include)
+set (TSTREAMER_LIBRARIES_INSTALL_PATH lib)
+set (TSTREAMER_PLUGINS_INSTALL_PATH ${TSTREAMER_LIBRARIES_INSTALL_PATH}/gstreamer-1.0)
+set (TSTREAMER_HEADERS_INSTALL_PATH include)
 
 # include and lib folders of this project
-set (TLSTREAMER_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/gst-libs)
-set (TLSTREAMER_LIBRARIES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+set (TSTREAMER_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/gst-libs)
+set (TSTREAMER_LIBRARIES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 find_package(Threads REQUIRED)
 
@@ -163,6 +163,7 @@ message(STATUS "c++ ${CMAKE_CXX_FLAGS}")
 message(STATUS "c ${CMAKE_C_FLAGS}")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+
 if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64")
     # TODO: test if it increases x86 performance as well and rm check for aarch64
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ftree-vectorize") # should be used with "-O2"
@@ -181,7 +182,10 @@ configure_file(cmake/config.h.in configs/config.h @ONLY)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/configs)
 
-add_subdirectory(thirdparty)
+IF(USE_KHADAS_ENV)
+    add_subdirectory(thirdparty)
+ENDIF(USE_KHADAS_ENV)
+
 add_subdirectory(utils)
 add_subdirectory(gst)
 add_subdirectory(gst-libs)
