@@ -109,7 +109,7 @@ gst-inspect-1.0 mqtt
 模型文件拷贝到：/home/khadas/（见插件 inferservice） 即可，这个发布的时候，可以随意指定路径。
 ### 测试命令
 ```
-gst-launch-1.0 rtspsrc location="rtsp://**" ! rtph264depay ! capsfilter caps="video/x-h264" ! h264parse ! avdec_h264 !  videoanalysis businessdll=/dir/libinferservice.so  ! postprocess ! mqtt username=admin userpwd=admin servip=10.11.5.247 servport=1883 ! fakevideosink
+gst-launch-1.0 rtspsrc location="rtsp://**" ! rtph264depay ! capsfilter caps="video/x-h264" ! h264parse ! avdec_h264 !  videoanalysis businessdll=/dir/libinferservice.so  ! postprocess ! mqtt username=** userpwd=** servip=** servport=1883 ! fakevideosink
 ```
 
 # 致谢
