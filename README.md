@@ -4,8 +4,8 @@ Tengine Streamer是由 OPEN AI LAB基于GStreamer多媒体框架的分析推理�
 完整的解决方案利用了：
 
 1. 用于管道管理的开源GStreamer 框架
-1. GStreamer 用于输入和输出的插件，如媒体文件和来自摄像头或网络的实时流媒体
-1. 从模型商店的培训框架TensorFlow、Caffe等转换而来的Tengine 深度学习模型
+2. GStreamer 用于输入和输出的插件，如媒体文件和来自摄像头或网络的实时流媒体
+3. 从模型商店的培训框架TensorFlow、Caffe等转换而来的Tengine 深度学习模型
 
 Tengine-Streamer中的解决方案深度学习的插件：
 1. 推理插件利用Tengine 使用深度学习模型进行高性能推理
@@ -124,3 +124,4 @@ gst-launch-1.0 rtspsrc location="rtsp://**" ! rtph264depay ! capsfilter caps="vi
 - [turbojpeg](https://github.com/libjpeg-turbo/libjpeg-turbo)
 # License
 - [Apache 2.0](https://github.com/OAID/Tengine/blob/tengine-lite/LICENSE)
+- LGPL
