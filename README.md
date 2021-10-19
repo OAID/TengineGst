@@ -111,7 +111,7 @@ gst-inspect-1.0 mqtt
 ```
 gst-launch-1.0 rtspsrc location="rtsp://**" ! rtph264depay ! capsfilter caps="video/x-h264" ! h264parse ! avdec_h264 !  videoanalysis businessdll=/dir/libinferservice.so  ! postprocess ! mqtt username=** userpwd=** servip=** servport=1883 ! fakevideosink
 ```
-
+当推理得到结果，就会把结果通过mqtt 插件发送到mqtt broker。mqtt 测试工具可以用 MQTTBox，订阅主题“detect_result”可以查看推理结果。
 # 致谢
 - [Tengine](https://github.com/OAID/Tengine)
 - [GStreamer](https://gstreamer.freedesktop.org/src/)
