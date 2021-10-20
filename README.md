@@ -90,7 +90,7 @@ cmake ..
 make && make install
 ```
 
-##### 编译工程
+### 编译工程
 cmake 目录下 cross.cmake 文件有交叉编译开关。交叉编译环境需调整交叉编译路径。对应的 khadas 支持库已经提供，打开开关即可。
 
 具体编译方法：
