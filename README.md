@@ -3,15 +3,15 @@
 ## 简介
 Tengine Streamer 是 OPEN AI LAB 基于 GStreamer 多媒体框架的分析推理框架，用于创建各类多媒体处理管道，可以方便的利用各种成熟的插件快速搭建起稳定的应用，并使用 Tengine 优化推理操作，更快更优更专注的开发核心 AI 业务。
 完整的解决方案利用了：
-- 用于管道管理的开源 GStreamer 框架
-- GStreamer 用于输入和输出的插件，如媒体文件和来自摄像头或网络的实时流媒体
-- GStreamer 各种成熟插件，例如编解码、图形处理等 
-- 从主流训练框架 Caffe、TensorFlow、ONNX、Darknet 等转换而来的 Tengine 深度学习模型 tmfile
+- 用于管道管理的开源 GStreamer 框架;
+- GStreamer 用于输入和输出的插件，如媒体文件和来自摄像头或网络的实时流媒体;
+- GStreamer 各种成熟插件，例如编解码、图形处理等;
+- 从主流训练框架 Caffe、TensorFlow、ONNX、Darknet 等转换而来的 Tengine 深度学习模型 tmfile。
 
 Tengine-Streamer 中深度学习推理的插件：
-- 推理插件利用Tengine 使用深度学习模型进行高性能推理
-- 推理结果的可视化，带有检测对象的边界框和标签，位于视频流之上
-- 推理结果可以通过MQTT等标准协议推送出去
+- 推理插件利用Tengine 使用深度学习模型进行高性能推理；
+- 推理结果的可视化，带有检测对象的边界框和标签，位于视频流之上；
+- 推理结果可以通过MQTT等标准协议推送出去。
 
 ## 架构
 ![架构](https://github.com/OAID/TengineStreamer/blob/main/docs/Tengine-Streamer.png)
@@ -19,11 +19,11 @@ Tengine-Streamer 中深度学习推理的插件：
 ![pipeline](https://github.com/OAID/TengineStreamer/blob/main/docs/TengineStreamer-Flow.png)
 
 ## 插件包括
-- streammux：多路流合并成一路由一路算法处理多路
-- streamdemux：一路推理的结果分离出相对应的各路，与 streammux 配合使用
-- videoanalysis：主要的推理插件，提供了标准二次插件接口，可以动态加载推理业务，在大多数不想写插件的时候，只需要实现一个业务动态库，由此插件把推理业务交给推理业务库即可。配合类“inferservice”的业务库使用。如果特别熟悉 GStreamer 插件开发，可以自己写一个插件来直接进行推理业务。
-- mqtt：把推理结果泵向 mqtt broker 的功能
-- postprocess：简单的把推理结果叠加到视频流的功能
+- streammux：多路流合并成一路由一路算法处理多路；
+- streamdemux：一路推理的结果分离出相对应的各路，与 streammux 配合使用；
+- videoanalysis：主要的推理插件，提供了标准二次插件接口，可以动态加载推理业务，在大多数不想写插件的时候，只需要实现一个业务动态库，由此插件把推理业务交给推理业务库即可。配合类“inferservice”的业务库使用。如果特别熟悉 GStreamer 插件开发，可以自己写一个插件来直接进行推理业务；
+- mqtt：把推理结果泵向 mqtt broker 的功能；
+- postprocess：简单的把推理结果叠加到视频流的功能。
 
 ## 业务插件
 inferservice：调用Tengine 推理框架，加载模型，推理结果，并把结果输出到分析插件按照类 inferservice 库的框架编译的库，也可以作为 videoanalysis 插件的业务库传入，修改 businessdll 属性为业务库地址，即可以支持不同算法业务。
@@ -115,10 +115,7 @@ cp aarch64/Release/lib/libgst* /usr/lib/aarch64-linux-gnu/gstreamer-1.0/
 cp aarch64/Release/lib/libgst* /usr/lib/x86_64-linux-gnu/gstreamer-1.0/
 ```
 
-执行类似命令检查插件：
-`gst-inspect-1.0 mqtt`
-
-因为示例插件，需要把子目录 `run` 里面的库拷贝到设备的 `/usr/lib/aarch64-linux-gnu/` 目录下
+执行类似命令检查插件 `gst-inspect-1.0 mqtt` 。因为示例插件，需要把子目录 `run` 里面的库拷贝到设备的 `/usr/lib/aarch64-linux-gnu/` 目录下
 模型文件拷贝到：`/home/khadas/`（见插件 inferservice） 即可，这个发布的时候，可以随意指定路径。
 
 ### 测试命令
