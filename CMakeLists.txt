@@ -20,7 +20,7 @@
 #
 cmake_minimum_required (VERSION 3.1)
 
-project(Tengine_Streamer_Plugins)
+project(Tengine_Gst_Plugins)
 
 include(cmake/cross.cmake)
 

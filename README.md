@@ -1,22 +1,22 @@
-# TengineStreamer
+# TengineGst
 
 ## 简介
-Tengine Streamer 是 OPEN AI LAB 基于 GStreamer 多媒体框架的分析推理框架，用于创建各类多媒体处理管道，可以方便的利用各种成熟的插件快速搭建起稳定的应用，并使用 Tengine 优化推理操作，更快更优更专注的开发核心 AI 业务。
+TengineGst 是 OPEN AI LAB 基于 GStreamer 多媒体框架的分析推理框架，用于创建各类多媒体处理管道，可以方便的利用各种成熟的插件快速搭建起稳定的应用，并使用 Tengine 优化推理操作，更快更优更专注的开发核心 AI 业务。
 完整的解决方案利用了：
 - 用于管道管理的开源 GStreamer 框架;
 - GStreamer 用于输入和输出的插件，如媒体文件和来自摄像头或网络的实时流媒体;
 - GStreamer 各种成熟插件，例如编解码、图形处理等;
 - 从主流训练框架 Caffe、TensorFlow、ONNX、Darknet 等转换而来的 Tengine 深度学习模型 tmfile。
 
-Tengine-Streamer 中深度学习推理的插件：
+TengineGst 中深度学习推理的插件：
 - 推理插件利用Tengine 使用深度学习模型进行高性能推理；
 - 推理结果的可视化，带有检测对象的边界框和标签，位于视频流之上；
 - 推理结果可以通过MQTT等标准协议推送出去。
 
 ## 架构
-![架构](https://github.com/OAID/TengineStreamer/blob/main/docs/Tengine-Streamer.png)
+![架构](https://github.com/OAID/TengineGst/blob/main/docs/TengineGst.png)
 数据流
-![pipeline](https://github.com/OAID/TengineStreamer/blob/main/docs/TengineStreamer-Flow.png)
+![pipeline](https://github.com/OAID/TengineGst/blob/main/docs/TengineGst-Flow.png)
 
 ## 插件包括
 - streammux：多路流合并成一路由一路算法处理多路；
